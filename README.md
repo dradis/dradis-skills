@@ -1,18 +1,89 @@
-# Dradis Skills for Claude Code
+# AI agent skills for Dradis
 
-A Claude Code plugin providing skills for [Dradis Framework](https://dradis.com) — the cybersecurity collaboration and reporting platform.
+Agent skills for [Dradis Framework](https://dradis.com) — the cybersecurity collaboration and reporting system of record. Each skill teaches a coding agent how to work or build on top of Dradis.
 
 
-## Installation
+
+## Install the skills
+
+**As a Claude Code plugin** - this repo is also a plugin marketplace. From within Claude Code:
 
 ```
-/plugin install dradis-skills
+/plugin marketplace add dradis/dradis-skills
+/plugin install dradis-skills@dradis-core
 ```
 
+**By hand** - find individual skills at [./plugins/dradis-core/skills](./plugins/dradis-core/skills)
 
 ## Available Skills
 
-### `/dradis-core:methodology`
+| Skill                   | Description                     |
+| dradis-core:calculator  | Create a custom risk calculator |
+| dradis-core:html-theme  | Create an HTML export template  |
+| dradis-core:kit         | A complete configuration Kit    |
+| dradis-core:methodology | Build a methodology template    |
+
+
+## `/dradis-core:calculator`
+
+Create a Dradis risk calculator add-on (a `dradis-calculator_*` gem) from a reference calculator or published scoring model.
+
+**Usage:**
+
+```
+/dradis-core:calculator https://aivss.owasp.org/ssvc.html aivss-ssvc
+```
+
+The skill will:
+1. Classify the source — vendoring the model owner's own implementation where one exists, transcribing it where one doesn't
+2. Classify the model's shape (discrete metrics, numeric scales, taxonomy, lookup table, multi-version) to pick the UI
+3. Scaffold the gem from the AIVSS-SSVC boilerplate and build it, available at both the instance level and on each issue
+4. Verify at the strongest tier the source allows
+5. Lint with Dradis CE's rubocop config
+6. Report the verification tier and the defaults taken, with instructions for installing and testing the calculator on a Dradis CE instance
+
+**Produces:** A new `dradis-calculator_{name}/` sibling directory that is verified against the source, plus Dradis CE install and test instructions.
+
+
+## `/dradis-core:html-theme`
+
+Create an HTML export template (ERB) for a Dradis project kit — self-contained reports with charts, risk dashboards, and detailed findings.
+
+**Usage:**
+
+```
+/dradis-core:html-theme owasp "dark cyberpunk dashboard with radar charts"
+```
+
+The skill will:
+1. Read the kit's project template to discover the field schema and sample values
+2. Detect Liquid-computed fields (e.g., `Risk`, `Risk Score`) and generate ERB equivalents
+3. Build a self-contained `.html.erb` template with CSS, charts, and print styles
+4. Deploy to both the kit directory and `storage/templates/` for immediate testing
+
+**Supports:** Bootstrap 5, Chart.js, Highcharts, Font Awesome via CDN. Vanilla JS preferred.
+
+
+## `/dradis-core:kit`
+
+Create a complete setup kit — sample project data, methodology, field schema, and report templates. The kit appears as an option in the Setup wizard so new users can explore Dradis with realistic, domain-specific content.
+
+**Usage:**
+
+```
+/dradis-core:kit redteam "adversary simulation with MITRE ATT&CK mapping"
+```
+
+The skill will:
+1. Design the field schema (issue fields, evidence fields, content blocks) and present for approval
+2. Create note templates, sample project data (XML + ZIP), and node/evidence structure
+3. Delegate to `/dradis-core:methodology` and `/dradis-core:html-theme` for methodology and report templates
+4. Register the kit in the controller and Setup wizard view
+5. Deploy for immediate testing
+
+**Produces:** A complete kit under `lib/tasks/templates/{kit}/` ready for the Setup wizard.
+
+## `/dradis-core:methodology`
 
 Build a Dradis methodology XML file by parsing external sources.
 
@@ -34,67 +105,7 @@ The skill will:
 
 See `samples/` for example output files.
 
-
-### `/dradis-core:html-theme`
-
-Create an HTML export template (ERB) for a Dradis project kit — self-contained reports with charts, risk dashboards, and detailed findings.
-
-**Usage:**
-
-```
-/dradis-core:html-theme owasp "dark cyberpunk dashboard with radar charts"
-```
-
-The skill will:
-1. Read the kit's project template to discover the field schema and sample values
-2. Detect Liquid-computed fields (e.g., `Risk`, `Risk Score`) and generate ERB equivalents
-3. Build a self-contained `.html.erb` template with CSS, charts, and print styles
-4. Deploy to both the kit directory and `storage/templates/` for immediate testing
-
-**Supports:** Bootstrap 5, Chart.js, Highcharts, Font Awesome via CDN. Vanilla JS preferred.
-
-
-### `/dradis-core:kit`
-
-Create a complete setup kit — sample project data, methodology, field schema, and report templates. The kit appears as an option in the Setup wizard so new users can explore Dradis with realistic, domain-specific content.
-
-**Usage:**
-
-```
-/dradis-core:kit redteam "adversary simulation with MITRE ATT&CK mapping"
-```
-
-The skill will:
-1. Design the field schema (issue fields, evidence fields, content blocks) and present for approval
-2. Create note templates, sample project data (XML + ZIP), and node/evidence structure
-3. Delegate to `/dradis-core:methodology` and `/dradis-core:html-theme` for methodology and report templates
-4. Register the kit in the controller and Setup wizard view
-5. Deploy for immediate testing
-
-**Produces:** A complete kit under `lib/tasks/templates/{kit}/` ready for the Setup wizard.
-
-### `/dradis-core:calculator`
-
-Create a Dradis risk calculator add-on (a `dradis-calculator_*` gem) from a reference calculator or published scoring model.
-
-**Usage:**
-
-```
-/dradis-core:calculator https://aivss.owasp.org/ssvc.html aivss-ssvc
-```
-
-The skill will:
-1. Classify the source — vendoring the model owner's own implementation where one exists, transcribing it where one doesn't
-2. Classify the model's shape (discrete metrics, numeric scales, taxonomy, lookup table, multi-version) to pick the UI
-3. Scaffold the gem from the AIVSS-SSVC boilerplate and build it, available at both the instance level and on each issue
-4. Verify at the strongest tier the source allows
-5. Lint with Dradis CE's rubocop config
-6. Report the verification tier and the defaults taken, with instructions for installing and testing the calculator on a Dradis CE instance
-
-**Produces:** A new `dradis-calculator_{name}/` sibling directory that is verified against the source, plus Dradis CE install and test instructions.
-
-
-## Samples
+### Samples
 
 The `samples/` directory contains reference files:
 

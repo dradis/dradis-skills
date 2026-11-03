@@ -13,8 +13,8 @@
     {
       "name": "dradis-core",
       "source": "./plugins/dradis-core",
-      "description": "Core Dradis Framework skills: methodology builder and more",
-      "version": "0.0.1",
+      "description": "Skills to build and vibe code on Dradis Framework",
+      "version": "0.0.2",
       "author": {
         "name": "Dradis Framework"
       }
