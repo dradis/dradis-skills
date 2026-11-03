@@ -17,11 +17,17 @@ Agent skills for [Dradis Framework](https://dradis.com) — the cybersecurity co
 
 ## Available Skills
 
+The main day-to-day skill to use Dradis as part of your workflow is `dradis-core:dradis`.
+
+The other skills that let you build on top of the platform are:
+
 | Skill                   | Description                     |
+|-------------------------|---------------------------------|
 | dradis-core:calculator  | Create a custom risk calculator |
 | dradis-core:html-theme  | Create an HTML export template  |
 | dradis-core:kit         | A complete configuration Kit    |
 | dradis-core:methodology | Build a methodology template    |
+
 
 
 ## `/dradis-core:calculator`
